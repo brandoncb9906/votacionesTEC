@@ -1,0 +1,49 @@
+h3 {
+    font-size: 28px;
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: 2px;
+}
+a {
+    text-decoration: none;
+    color: black;
+}
+.page-container {
+    position: absolute;
+    height: 75%;
+    width: 80%;
+    background:white;
+    border-color: black;
+    border-radius: 5px;
+}
+.button {
+    position: absolute;
+    left: 85%;
+    top: 2%;
+}
+.page-content-container {
+    color: black;
+    padding: 50px;
+}
+.item-lista {
+    background:rgba(0, 0, 0, 0.2);
+    padding: 8px;
+    border-radius: 5px;
+    width: 100%;
+    cursor: pointer;
+}
+.item-lista:hover {
+    color: #140E39;
+}
+.item-lista::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 2px;
+    background-color: #140E39;
+    opacity: 0;
+    transform: scaleY(0);
+    transition: transform 0.2s, opacity 0.2s;
+}

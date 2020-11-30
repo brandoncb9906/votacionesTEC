@@ -1,0 +1,36 @@
+<h3>Votantes</h3>
+<div class="page-container">
+    <div class="page-content-container">
+        <div class="radio">
+            <input type="radio" name="tipo" id="publicas" value="profesor" (change)="onItemChange($event.target.value)">
+            <label for="publicas">Profesor</label>
+            <input type="radio" name="tipo" id="privadas" value="estudiante" (change)="onItemChange($event.target.value)">
+            <label for="privadas">Estudiante</label>
+        </div>
+        <div class="descripcion">
+            <mat-form-field class="example-full-width" style="width: 40%;">
+                <mat-label color="primary"> Nombre </mat-label>
+                <input  matInput [(ngModel)]="nombre">
+            </mat-form-field>
+        </div>
+        <div class="nombreppv">
+            <mat-form-field class="example-full-width" style="width: 40%;">
+                <mat-label color="primary"> Identificador </mat-label>
+                <input  matInput [(ngModel)]="id">
+            </mat-form-field>    
+        </div>
+        <div>
+            <button (click)="agregarVotante()" mat-raised-button color="primary">Agregar Votante</button>
+            <button style="margin-left: 2%;" (click)="eliminarVotante()" mat-raised-button [disabled]="disableSelect.value" color="accent">Eliminar Votante</button>
+        </div>
+        <div style="position: absolute; top: 50%; bottom: 1%; right: 1%; left: 1%; width: 98%;" id="global">
+            <div id=nombres>
+                <mat-selection-list #votanteList (selectionChange)="onGroupsChange(votanteList.selectedOptions.selected)">
+                    <mat-list-option *ngFor="let votante of votantes" [value]="votante">
+                      {{votante.nombre}}
+                    </mat-list-option>
+                </mat-selection-list>     
+            </div>        
+        </div>
+    </div>
+</div>

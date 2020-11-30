@@ -1,0 +1,78 @@
+body {
+    font-size: 16px;
+    font-family: 'Roboto';
+}
+p, label{
+    color: black;
+}
+h3 {
+    font-size: 28px;
+    color: white;
+    font-weight: 600;
+    letter-spacing: 2px;
+}
+.page-container {
+    position: absolute;
+    height: 75%;
+    width: 80%;
+    background: #fff;
+    border-color: black;
+    border-radius: 5px;
+}
+.page-content-container {
+    padding: 50px;
+}
+.radio input[type="radio"]{
+    display: none;
+}
+.radio label {
+    color: black;
+    padding: 5px 15px 5px 51px;
+    display: inline-block;
+    position: relative;
+    font-size: 1em;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.radio label:hover {
+    background: turquoise;
+    transition: all 0.3s ease;
+}
+.radio label:before {
+    content: "";
+    width: 17px;
+    height: 17px;
+    display: inline-block;
+    background: none;
+    border: 3px solid teal;
+    border-radius: 50%;
+    position: absolute;
+    left: 17px;
+    top: 8px;
+}
+.radio input[type="radio"]:checked + label{
+    padding: 5px 15px;
+    background-color: teal;
+    border-radius: 2px;
+    color: black;
+}
+.radio input[type="radio"]:checked + label:before{
+    display: none;
+}
+.listaVotaciones {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    width: 400px;
+}
+#global {
+	height: 300px;
+    width: 48%;
+	border: 1px solid #ddd;
+	background: #f1f1f1;
+	overflow-y: scroll;
+}
+#mensajes {
+	height: auto;
+}

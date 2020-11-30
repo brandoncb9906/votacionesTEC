@@ -1,0 +1,17 @@
+h3 {
+    font-size: 28px;
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: 2px;
+}
+.page-container {
+    position: absolute;
+    height: 75%;
+    width: 80%;
+    background:white;
+    border-color: black;
+    border-radius: 5px;
+}
+.page-content-container {
+    padding: 50px;
+}

@@ -1,0 +1,52 @@
+<h3>Crear Votación</h3>
+<div class="page-container">
+    <div class="page-content-container">
+        <p>Tipo de Votación</p>
+        <div class="radio">
+            <input type="radio" name="tipo" id="publicas" value="publica" (change)="onItemChange($event.target.value)">
+            <label for="publicas">Públicas</label>
+            <input type="radio" name="tipo" id="privadas" value="privada" (change)="onItemChange($event.target.value)">
+            <label for="privadas">Privadas</label>
+        </div>
+        <div>
+            <mat-form-field class="example-full-width" style="width: 300px;">
+                <mat-label color="primary"> Descripción </mat-label>
+                <input  matInput [(ngModel)]="votacion.descripcion">
+            </mat-form-field>  
+        </div>
+        <div>
+            <mat-form-field class="example-full-width" style="width: 300px;">
+                <mat-label color="primary"> Nombre quien propuso votación </mat-label>
+                <input  matInput [(ngModel)]="votacion.nombrePropuso">
+            </mat-form-field>  
+        </div>
+        <div>
+            <label for="codigo">Código de acceso a la votación: <strong>{{votacion.codigoAcceso}}</strong></label>
+        </div>
+        <div>
+            <mat-form-field class="example-full-width" style="width: 300px;">
+                <mat-label color="primary"> Nombre votante </mat-label>
+                <input  matInput [(ngModel)]="votacion.nombreVotante">
+            </mat-form-field>  
+        </div>
+        <div>
+            <mat-form-field class="example-full-width" style="width: 300px;">
+                <mat-label color="primary"> Código de consejo </mat-label>
+                <input  matInput [(ngModel)]="votacion.codigoConsejo">
+            </mat-form-field>
+        </div>
+        <div class="listaVotaciones" id="global">
+            <div id=nombres>
+                <mat-selection-list #votanteList (selectionChange)="onGroupsChange(votanteList.selectedOptions.selected)">
+                    <mat-list-option *ngFor="let votante of votantes" [value]="votante">
+                        {{votante.nombre}}
+                    </mat-list-option>
+                </mat-selection-list>
+            </div>
+        </div>
+        <div>
+            <button style="position: absolute; right: 86%; bottom: 2%; width: 13%" (click)="crearVotacion()" mat-raised-button color="primary">Crear Votación</button>
+            <button style="position: absolute; left: 86%; bottom: 2%; width: 13%" (click)="volver()" mat-raised-button color="accent">Volver</button>
+        </div>
+    </div>
+</div>

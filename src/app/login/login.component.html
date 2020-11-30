@@ -1,0 +1,25 @@
+<body>
+  <section>
+    <div class="box">
+      <div class="form">
+        <h2>Login</h2>
+        <form>
+          <div class="inputBx">
+            <input [(ngModel)]="user.email" [ngModelOptions]="{standalone: true}" type="text" placeholder="Usuario" >
+            <img src="../../assets/Images/login.png" width="25px">
+          </div>
+          <div class="inputBx">
+            <input [(ngModel)]="user.password" [ngModelOptions]="{standalone: true}" type="password" placeholder="Contraseña" >
+            <img src="../../assets/Images/password.png" width="25px">
+          </div>
+          <div>
+            <p>¿<a href="#">Olvidaste la contraseña</a>?</p>
+          </div>
+          <div class="inputBx">
+            <input (click)="logIn()" type="submit" value="Iniciar Sesión">
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</body>

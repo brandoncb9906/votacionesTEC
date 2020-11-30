@@ -1,0 +1,43 @@
+<h3>Historial de Votaciones</h3>
+<div class="page-container">
+    <button *ngIf="editando == 'no' && detalleVotacion.status == 'Pausada'" style="position: absolute; left: 86%; top: 2%; width: 13%" (click)="iniciarVotacion()" mat-raised-button color="primary">Iniciar Votacion</button>
+    <button *ngIf="editando == 'no' && detalleVotacion.status == 'Pausada'" style="position: absolute; left: 86%; top: 10%; width: 13%" (click)="cambiarEstado1()" mat-raised-button color="primary">Modificar Votacion</button>
+    <button *ngIf="editando == 'no' && detalleVotacion.status == 'Abierta'" style="position: absolute; left: 86%; top: 2%; width: 13%" (click)="detenerVotacion()" mat-raised-button color="primary">Detener Votacion</button>
+    <button *ngIf="editando == 'no'" style="position: absolute; left: 86%; bottom: 2%; width: 13%" (click)="volverMenuPrincipal()" mat-raised-button color="accent">Volver</button>
+    <button *ngIf="editando == 'si'" style="position: absolute; left: 86%; bottom: 2%; width: 13%" (click)="cambiarEstado2()" mat-raised-button color="accent">Cancelar</button>
+    <button *ngIf="editando == 'si'" style="position: absolute; left: 86%; top: 2%; width: 13%" (click)="modificarVotacion()" mat-raised-button color="primary">Actualizar Datos</button>
+    <div *ngIf="editando == 'no'" class="page-content-container">
+        <p>Tipo: {{detalleVotacion.tipo}}</p>
+        <p>Código de Acceso: {{detalleVotacion.codigoAcceso}}</p>
+        <p>Código de Consejo: {{detalleVotacion.codigoConsejo}}</p>
+        <p>Descripción: {{detalleVotacion.descripcion}}</p>
+        <p>Nombre propuso: {{detalleVotacion.nombrePropuso}}</p>
+        <p>Nombre Votante: {{detalleVotacion.nombreVotante}}</p>
+    </div>
+    <div *ngIf="editando == 'si'" class="page-content-container">
+            <div>
+                <mat-form-field class="example-full-width" style="width: 300px;">
+                    <mat-label>Código de acceso</mat-label>
+                    <input [(ngModel)]="detalleVotacion.codigoAcceso" [ngModelOptions]="{standalone: true}" matInput placeholder="" />
+                </mat-form-field>  
+            </div>
+            <div>
+                <mat-form-field class="example-full-width" style="width: 300px;">
+                    <mat-label>Código de Consejo</mat-label>
+                    <input [(ngModel)]="detalleVotacion.codigoConsejo" [ngModelOptions]="{standalone: true}" matInput placeholder="" />
+                </mat-form-field>  
+            </div>
+            <div>
+                <mat-form-field class="example-full-width" style="width: 300px;">
+                    <mat-label>Descripción</mat-label>
+                    <input [(ngModel)]="detalleVotacion.descripcion" [ngModelOptions]="{standalone: true}" matInput placeholder="" />
+                </mat-form-field>  
+            </div>
+            <div>
+                <mat-form-field class="example-full-width" style="width: 300px;">
+                    <mat-label>Nombre quien propuso</mat-label>
+                    <input [(ngModel)]="detalleVotacion.nombrePropuso" [ngModelOptions]="{standalone: true}" matInput placeholder="" />     
+                </mat-form-field>  
+            </div>
+    </div>
+</div>
