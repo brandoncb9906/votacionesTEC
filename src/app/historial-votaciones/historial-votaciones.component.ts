@@ -6,37 +6,32 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Votaciones } from '../interfaces/votaciones';
 import { wsServices } from 'src/servicios/ws-service';
+import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-dialog-service';
+import { ToastService } from '../_services/toast.service';
 
 @Component({
   selector: 'app-historial-votaciones',
   templateUrl: './historial-votaciones.component.html',
   styleUrls: ['./historial-votaciones.component.css']
 })
-export class HistorialVotacionesComponent implements AfterViewInit {
+export class HistorialVotacionesComponent implements OnInit {
 
   listaVotaciones: MatTableDataSource<Votaciones>;
   displayedColumns: string[] = ['tipo', 'codigoConsejo', 'descripcion', 'estado', 'configurar', 'eliminar'];
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) matPaginator: MatPaginator;
   searchKey: String;
-  
-  constructor(private servicioVotaciones: VotacionesService, private router: Router, private _wsService: wsServices) {}
+  tipo: String;
+  estado: String;
 
-  ngAfterViewInit() {
-    /*this.servicioVotaciones.votaciones.push(
-      {id:'1', tipo: '10', codigoAcceso: '123', codigoConsejo: '123', descripcion: 'Hola',nombrePropuso: 'A', nombreVotante: 'B', date: '2020-09-11', favor: 0, encontra: 0, abstencion: 0, status: 'Pausada', votantes: []},
-      {id:'2', tipo: '10', codigoAcceso: '123', codigoConsejo: '123', descripcion: 'Hola',nombrePropuso: 'A', nombreVotante: 'B', date: '2020-09-11', favor: 0, encontra: 0, abstencion: 0, status: 'Abierta', votantes: []},
-      {id:'3', tipo: '10', codigoAcceso: '123', codigoConsejo: '123', descripcion: 'Hola',nombrePropuso: 'A', nombreVotante: 'B', date: '2020-09-11', favor: 0, encontra: 0, abstencion: 0, status: 'Cerrada', votantes: []},
-      {id:'4', tipo: '10', codigoAcceso: '123', codigoConsejo: '123', descripcion: 'Hola',nombrePropuso: 'A', nombreVotante: 'B', date: '2020-09-11', favor: 0, encontra: 0, abstencion: 0, status: 'Abierta', votantes: []},
-      {id:'5', tipo: '10', codigoAcceso: '123', codigoConsejo: '123', descripcion: 'Hola',nombrePropuso: 'A', nombreVotante: 'B', date: '2020-09-11', favor: 0, encontra: 0, abstencion: 0, status: 'Pausada', votantes: []},
-      {id:'6', tipo: '10', codigoAcceso: '123', codigoConsejo: '123', descripcion: 'Hola',nombrePropuso: 'A', nombreVotante: 'B', date: '2020-09-11', favor: 0, encontra: 0, abstencion: 0, status: 'Abierta', votantes: []},
-      {id:'7', tipo: '10', codigoAcceso: '123', codigoConsejo: '123', descripcion: 'Hola',nombrePropuso: 'A', nombreVotante: 'B', date: '2020-09-11', favor: 0, encontra: 0, abstencion: 0, status: 'Pausada', votantes: []},
-      {id:'8', tipo: '10', codigoAcceso: '123', codigoConsejo: '123', descripcion: 'Hola',nombrePropuso: 'A', nombreVotante: 'B', date: '2020-09-11', favor: 0, encontra: 0, abstencion: 0, status: 'Abierta', votantes: []},
-      {id:'9', tipo: '10', codigoAcceso: '123', codigoConsejo: '123', descripcion: 'Hola',nombrePropuso: 'A', nombreVotante: 'B', date: '2020-09-11', favor: 0, encontra: 0, abstencion: 0, status: 'Cerrada', votantes: []},
-      {id:'1', tipo: '10', codigoAcceso: '123', codigoConsejo: '123', descripcion: 'Hola',nombrePropuso: 'A', nombreVotante: 'B', date: '2020-09-11', favor: 0, encontra: 0, abstencion: 0, status: 'Cerrada', votantes: []},
-      {id:'2', tipo: '10', codigoAcceso: '123', codigoConsejo: '123', descripcion: 'Hola',nombrePropuso: 'A', nombreVotante: 'B', date: '2020-09-11', favor: 0, encontra: 0, abstencion: 0, status: 'Cerrada', votantes: []}
-      )*/
+  constructor(public toastService: ToastService,private confirmationDialogService: ConfirmationDialogService,private servicioVotaciones: VotacionesService, private router: Router, private _wsService: wsServices) {}
 
+  ngOnInit(): void {
+    const callback = this.cargarVotaciones.bind(this);
+    this.servicioVotaciones.getVotingHistoryAPI(callback);
+  }
+
+  cargarVotaciones(){
     this.listaVotaciones = new MatTableDataSource<Votaciones>(this.servicioVotaciones.votaciones)
     this.listaVotaciones.sort = this.sort;
     this.listaVotaciones.paginator = this.matPaginator;
@@ -48,13 +43,18 @@ export class HistorialVotacionesComponent implements AfterViewInit {
 
   eliminarVotacion(id){
     console.log("ID ENVIADO: "+ id)
-    this.servicioVotaciones.eliminarVotacion(id)
     this.cargarLista()
     let detalleVotacion = this.servicioVotaciones.getDetalleVotacion(id);
-    this._wsService.eliminarVotacion(detalleVotacion.codigoAcceso, detalleVotacion.codigoConsejo).subscribe(result => {
-      console.log(result)
-      
+    this.servicioVotaciones.eliminarVotacion(id)
+    console.log("-------------------------------------")
+    console.log(detalleVotacion)
+    console.log("-------------------------------------")
+    this._wsService.eliminarVotacion(detalleVotacion.codigoAcceso, detalleVotacion.codigoConsejo).subscribe(
+      result => {
+        this.showSuccess()
+        console.log(result)
       ,error => {
+        this.showError()
         console.log(error)
       }
     })
@@ -72,5 +72,34 @@ export class HistorialVotacionesComponent implements AfterViewInit {
 
   applyFilter(){
     this.listaVotaciones.filter = this.searchKey.trim().toLowerCase();
+  }
+
+  public openConfirmationDialog(id) {
+    this.confirmationDialogService.confirm('Por favor confirma', `¿Quieres eliminar la votación?`)
+    .then((confirmed) => {
+      if(confirmed === true){
+        this.eliminarVotacion(id)
+      }
+    })
+    .catch(() => 
+      console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));
+  }
+
+  showSuccess() {
+    this.toastService.show(`Votación eliminada correctamente.!`, {
+      classname: 'bg-success text-light',
+      delay: 5000 ,
+      autohide: true,
+      headertext: 'Eliminar Votación'
+    });
+  }
+
+  showError() {
+    this.toastService.show('Ha habido un problema al crear la votación, favor intente de nuevo.!', {
+      classname: 'bg-danger text-light',
+      delay: 5000 ,
+      autohide: true,
+      headertext: 'Error!!!'
+    });
   }
 }

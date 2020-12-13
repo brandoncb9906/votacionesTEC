@@ -5,7 +5,7 @@
         <h2>Login</h2>
         <form>
           <div class="inputBx">
-            <input [(ngModel)]="user.email" [ngModelOptions]="{standalone: true}" type="text" placeholder="Usuario" >
+            <input [(ngModel)]="user.username" [ngModelOptions]="{standalone: true}" type="text" placeholder="Usuario" >
             <img src="../../assets/Images/login.png" width="25px">
           </div>
           <div class="inputBx">
@@ -13,7 +13,7 @@
             <img src="../../assets/Images/password.png" width="25px">
           </div>
           <div>
-            <p>¿<a href="#">Olvidaste la contraseña</a>?</p>
+            <p *ngIf="errorMsg">{{errorMsg}}</p>
           </div>
           <div class="inputBx">
             <input (click)="logIn()" type="submit" value="Iniciar Sesión">

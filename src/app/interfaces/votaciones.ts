@@ -5,7 +5,6 @@ export interface Votaciones {
     codigoConsejo: string;
     descripcion: string;
     nombrePropuso: string;
-    nombreVotante: string;
     date: string;
     favor: 0;
     encontra: 0;

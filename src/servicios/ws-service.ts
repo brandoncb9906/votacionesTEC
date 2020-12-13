@@ -9,58 +9,74 @@ const axios = require('axios');
 
 export class wsServices {
 
-url = "http://localhost:3000";
+url = "https://immense-savannah-25898.herokuapp.com";
 
 constructor(private http: HttpClient) {}
 
   loginWS(req: any): Observable<any> {
-    const config = {
-      req
-    };
-    return this.http.post(`${this.url}/user/login`, config);
+    return this.http.post(`${this.url}/api/loginAdmin`, req);
   }
 
-  crearVotacion(accesCode, adviceCode, descripcion, date, favor, against, abstain, nameProposedPoint, status, listvotantes, votacionType) {
+  getVotingHistory(){
+    return this.http.get(`${this.url}/api/getVoting`);
+  }
+
+  agregarVotante(req: any){
+    return this.http.post(`${this.url}/api/insertVoter`, req);
+  }
+
+  getProfessors(){
+    return this.http.get(`${this.url}/api/getProfessors`);
+  }
+  
+  crearVotacion(description, whoProposed, accesCode, councilCode, voteType, voteDate, voters) {
     const config = {
-      accesCode: accesCode,
-      adviceCode:adviceCode,
-      descripcion: descripcion,
-      date: date,
-      favor: favor,
-      against: against,
-      abstain: abstain,
-      nameProposedPoint: nameProposedPoint,
-      status: status, 
-      listvotantes: listvotantes,
-      votacionType: votacionType // 10 privada 20 publica
+      description: description,
+      whoProposed: whoProposed,
+      accessCode: accesCode,
+      councilCode: councilCode,
+      voteType: voteType, // 0 privada 1 publica    
+      voteDate: voteDate, 
+      voters: voters
     }
     console.log(config)
-    return this.http.post(`${this.url}/votacion/addVotacion`, config);
+    return this.http.post(`${this.url}/api/createVote`, config);
   }
 
-  modificarVotacion(codigoAcceso, codigoConsejo, descripcion, nombrePropuso){
+  modificarVotacion(codigoAcceso, codigoConcejo, descripcion, nombrePropuso, nuevoCodigoAcceso, nuevoCodigoConcejo){
     const config = {
-      accesCode: codigoAcceso,
-      adviceCode: codigoConsejo,
-      description: descripcion,
-      nameProposedPoint: nombrePropuso
-    }
-    return this.http.post(`${this.url}/votacion/modifVotacion`, config)
+      "accessCode": codigoAcceso, 
+      "councilCode": codigoConcejo,
+      "description": descripcion,
+      "whoProposed": nombrePropuso,
+      "newAccessCode": nuevoCodigoAcceso,
+      "newCouncilCode": nuevoCodigoConcejo
+  }
+    return this.http.post(`${this.url}/api/UpdateVote`, config)
   }
 
   eliminarVotacion(codigoAcceso, codigoConsejo){
     const config = {
-      accesCode: codigoAcceso,
-      adviceCode: codigoConsejo
+      accessCode: codigoAcceso,
+      councilCode: codigoConsejo
     }
-    return this.http.post(`${this.url}/votacion/deleteVotacion`, config)
+    return this.http.post(`${this.url}/api/deleteVote`, config)
   }
 
-  iniciarVotacion(codigoAcceso, codigoConsejo){
+  iniciarVotacion(codigoAcceso, codigoConcejo){
     const config = {
-      accesCode: codigoAcceso,
-      adviceCode: codigoConsejo
+      "accessCode": codigoAcceso,
+      "councilCode": codigoConcejo
     }
-    return this.http.post(`${this.url}/votacion/openVotacion`, config)  
+    console.log(config)
+    return this.http.post(`${this.url}/api/allowVote`, config)  
+  }
+
+  cerrarVotacion(codigoAcceso, codigoConsejo){
+    const config = {
+      "accessCode": codigoAcceso,
+      "councilCode": codigoConsejo
+    }
+    return this.http.post(`${this.url}/api/closeVote`, config)  
   }
 }

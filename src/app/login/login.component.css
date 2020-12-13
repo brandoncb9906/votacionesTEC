@@ -5,7 +5,7 @@ section {
     min-height: 100vh;
     background: linear-gradient(-30deg,#03a9f4 0%, #3a78b7 50%,
         #262626 50%, #607d8b 100%);
-        animation: animate 10s linear infinite;
+    animation: animate 10s linear infinite;
 }
 @keyframes animate {
     0%

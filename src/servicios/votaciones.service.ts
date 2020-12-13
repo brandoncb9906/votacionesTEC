@@ -10,49 +10,49 @@ export class VotacionesService {
 
   public votaciones: Votaciones[] = [];
   public votantes = []
+  public professors = []
+  public votingHistory = []
 
   constructor(private _wsService: wsServices) { }
 
-  cargarVotaciones(id, tipo, codigoAcceso, codigoConsejo, descripcion, nombrePropuso, nombreVotante, date, votantes){
-    this.votaciones.push({
+  cargarVotaciones(id, tipo, codigoAcceso, codigoConsejo, descripcion, nombrePropuso, date, favor, encontra, abstencion, estado, votantes){
+    this.votaciones.unshift({
       id: id,
-      tipo: tipo,
-      codigoAcceso: codigoAcceso,
+      tipo: tipo, 
+      codigoAcceso: codigoAcceso, 
       codigoConsejo: codigoConsejo,
       descripcion: descripcion,
       nombrePropuso: nombrePropuso,
-      nombreVotante: nombreVotante,
       date: date,
-      favor: 0,
-      encontra: 0,
-      abstencion: 0,
-      status: "Pausada",
+      favor: favor,
+      encontra: encontra,
+      abstencion: abstencion,
+      status: estado, // 2 is Active, 0 is close, 1 is ready to open.
       votantes: votantes
     })
   }
-
-  agregarVotante(nombre, identificador, tipo) {
+ 
+  agregarVotante(nombre, identificador, tipo) { // Tipo = profesor / estudiante
     var encontrado = false;
     if (this.votantes.length == 0) {
-      this.votantes.push({nombre: nombre, identificador: identificador, tipo: tipo})
+      this.votantes.push({name: nombre, identifier: identificador, type: tipo})
     }
     else {
       for (var i=0; i < this.votantes.length; i++) {
-        console.log(this.votantes[i].identificador + " " + identificador)
-        if (this.votantes[i].identificador == identificador){
+        if (this.votantes[i].identifier == identificador){
           encontrado = true;
         }
       }
       if (encontrado==false){
-        this.votantes.push({nombre: nombre, identificador: identificador, tipo: tipo})
+        this.votantes.push({name: nombre, identifier: identificador, type: tipo})
       }
     }
   }
 
   eliminarVotante (identificador) {
     for (var i=0; i < this.votantes.length; i++) {
-      if (this.votantes[i].identificador == identificador){
-        console.log("Id encontrado para eliminar> " + this.votantes[i].identificador)
+      if (this.votantes[i].identifier == identificador){
+        console.log("Id encontrado para eliminar> " + this.votantes[i].identifier)
         this.votantes.splice(i, 1)
       }
     }
@@ -75,4 +75,35 @@ export class VotacionesService {
     }
     console.log("Votaciones: " + JSON.stringify(this.votaciones))
   }
+
+  getProfessorsAPI(){
+    this._wsService.getProfessors().subscribe( data => {
+      this.professors = data['data']
+      this.getProfessors()
+    });
+  }
+
+  getProfessors(){
+    for (let i = 0; i < this.professors.length; i++){
+      this.agregarVotante(this.professors[i].name, this.professors[i].identifier, 0)
+    }
+  }
+
+  getVotingHistoryAPI(callback){
+    this._wsService.getVotingHistory().subscribe( data => {
+      this.votingHistory = data['data']
+      this.getVotingHistory();
+      callback();
+    })
+  }
+
+  getVotingHistory(){
+    this.votaciones = []
+    for (let i = 0; i < this.votingHistory.length; i++){
+      let id = this.votaciones.length.toString();
+      let v = this.votingHistory[i];
+      this.cargarVotaciones(id, v.voteType, v.accessCode, v.councilCode, v.description, v.whoProposed, v.voteDate, v.totalAgree, v.totalDisagree, v.totalAgainst, v.voteState, v.voters);
+    }
+  }
+
 }

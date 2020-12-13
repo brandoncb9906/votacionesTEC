@@ -1,30 +1,72 @@
 <h3>Historial de Votaciones</h3>
 <div class="page-container">
-    <button *ngIf="editando == 'no' && detalleVotacion.status == 'Pausada'" style="position: absolute; left: 86%; top: 2%; width: 13%" (click)="iniciarVotacion()" mat-raised-button color="primary">Iniciar Votacion</button>
-    <button *ngIf="editando == 'no' && detalleVotacion.status == 'Pausada'" style="position: absolute; left: 86%; top: 10%; width: 13%" (click)="cambiarEstado1()" mat-raised-button color="primary">Modificar Votacion</button>
-    <button *ngIf="editando == 'no' && detalleVotacion.status == 'Abierta'" style="position: absolute; left: 86%; top: 2%; width: 13%" (click)="detenerVotacion()" mat-raised-button color="primary">Detener Votacion</button>
+    <button *ngIf="editando == 'no' && detalleVotacion.status == '1'" style="position: absolute; left: 86%; top: 2%; width: 13%" (click)="openConfirmationDialog()" mat-raised-button color="primary">Iniciar Votacion</button>
+    <button *ngIf="editando == 'no' && detalleVotacion.status == '1'" style="position: absolute; left: 86%; top: 10%; width: 13%" (click)="cambiarEstado1()" mat-raised-button color="primary">Modificar Votacion</button>
+    <button *ngIf="editando == 'no' && detalleVotacion.status == '2'" style="position: absolute; left: 86%; top: 2%; width: 13%" (click)="openConfirmationDialog2()" mat-raised-button color="primary">Detener Votacion</button>
+    <button *ngIf="editando == 'no' && detalleVotacion.status == '0'" style="position: absolute; left: 86%; bottom: 8%; width: 13%; background-color: #2d572c;color: w;" (click)="exportarExcel()" mat-raised-button>Exportar Excel</button>
     <button *ngIf="editando == 'no'" style="position: absolute; left: 86%; bottom: 2%; width: 13%" (click)="volverMenuPrincipal()" mat-raised-button color="accent">Volver</button>
     <button *ngIf="editando == 'si'" style="position: absolute; left: 86%; bottom: 2%; width: 13%" (click)="cambiarEstado2()" mat-raised-button color="accent">Cancelar</button>
-    <button *ngIf="editando == 'si'" style="position: absolute; left: 86%; top: 2%; width: 13%" (click)="modificarVotacion()" mat-raised-button color="primary">Actualizar Datos</button>
-    <div *ngIf="editando == 'no'" class="page-content-container">
+    <button *ngIf="editando == 'si'" style="position: absolute; left: 86%; top: 2%; width: 13%" (click)="openConfirmationDialog3()" mat-raised-button color="primary">Actualizar Datos</button>
+    <div *ngIf="editando == 'no' && detalleVotacion.status == '1'" class="page-content-container">
         <p>Tipo: {{detalleVotacion.tipo}}</p>
         <p>Código de Acceso: {{detalleVotacion.codigoAcceso}}</p>
         <p>Código de Consejo: {{detalleVotacion.codigoConsejo}}</p>
         <p>Descripción: {{detalleVotacion.descripcion}}</p>
         <p>Nombre propuso: {{detalleVotacion.nombrePropuso}}</p>
-        <p>Nombre Votante: {{detalleVotacion.nombreVotante}}</p>
+        <div style="position: absolute; top: 30%; width: 25%;" id="global">
+            <div id=nombres>
+                <mat-list role="list" *ngFor="let votante of detalleVotacion.votantes">
+                    <mat-list-item role="listitem">{{votante.name}}</mat-list-item>
+                  </mat-list>   
+            </div>        
+        </div>
+    </div>
+    <div *ngIf="detalleVotacion.status == '2' || detalleVotacion.status == '0'" class="votacionActiva">
+        <h4>Votacion iniciada</h4>
+        <div class="votacionActivaDatos">
+            <table id="excel-table" style="width: 100%; margin-left: 2%;"> 
+                <tr>       
+                    <td class="cleanTable" style="width: 145px;">Tipo: </td> 
+                    <td class="cleanTable">{{detalleVotacion.tipo}}</td>  
+                 </tr> 
+                <tr>
+                    <td class="cleanTable" style="width: 145px;">Código de Acceso:</td>
+                    <td class="cleanTable">{{detalleVotacion.codigoAcceso}}</td>
+                </tr>
+                <tr>
+                    <td class="cleanTable" style="width: 145px;">Código de Concejo:</td>
+                    <td class="cleanTable">{{detalleVotacion.codigoConsejo}}</td>
+                </tr>  
+                <tr>
+                    <td class="cleanTable" style="width: 145px;">Descripción:</td>
+                    <td class="cleanTable">{{detalleVotacion.descripcion}}</td>
+                </tr>
+                <tr>
+                    <td class="cleanTable">Votos a favor</td> 
+                    <td class="cleanTable">{{detalleVotacion.favor}}</td>  
+                </tr>
+                <tr>
+                    <td class="cleanTable">Votos en contra</td>  
+                    <td class="cleanTable">{{detalleVotacion.encontra}}</td> 
+                </tr>
+                <tr>
+                    <td class="cleanTable"> Abstinecia</td>
+                    <td class="cleanTable">{{detalleVotacion.abstencion}}</td>
+                </tr>    
+            </table>
+        </div>
     </div>
     <div *ngIf="editando == 'si'" class="page-content-container">
             <div>
                 <mat-form-field class="example-full-width" style="width: 300px;">
                     <mat-label>Código de acceso</mat-label>
-                    <input [(ngModel)]="detalleVotacion.codigoAcceso" [ngModelOptions]="{standalone: true}" matInput placeholder="" />
+                    <input [(ngModel)]="nuevoCodigoAcceso" [ngModelOptions]="{standalone: true}" matInput placeholder="Nuevo código de acceso" />
                 </mat-form-field>  
             </div>
             <div>
                 <mat-form-field class="example-full-width" style="width: 300px;">
-                    <mat-label>Código de Consejo</mat-label>
-                    <input [(ngModel)]="detalleVotacion.codigoConsejo" [ngModelOptions]="{standalone: true}" matInput placeholder="" />
+                    <mat-label>Código de Concejo</mat-label>
+                    <input [(ngModel)]="nuevoCodigoConcejo" [ngModelOptions]="{standalone: true}" matInput placeholder="Nuevo código de concejo" />
                 </mat-form-field>  
             </div>
             <div>

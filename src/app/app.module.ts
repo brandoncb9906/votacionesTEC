@@ -12,6 +12,13 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { VotantesComponent } from './votantes/votantes.component';
 import { MaterialModule } from './material/material.module'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ToastComponent } from './toast/toast.component';
+import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogService } from './confirmation-dialog/confirmation-dialog-service';
+import { SocketIoModule } from 'ngx-socket-io'
+import { CookieService } from 'ngx-cookie-service'
+import { WebSocketService } from '../servicios/WebSocket/web-socket.service'
 
 @NgModule({
   declarations: [
@@ -22,7 +29,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     HistorialVotacionesComponent,
     VerVotacionesComponent,
     HistorialVotacionesDetalleComponent,
-    VotantesComponent
+    VotantesComponent,
+    ToastComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -30,9 +39,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     FormsModule,
     HttpClientModule,
     MaterialModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    NgbModule,
+    SocketIoModule
   ],
-  providers: [],
+  providers: [ConfirmationDialogService, CookieService, WebSocketService],
+  entryComponents: [ ConfirmationDialogComponent ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
