@@ -75,15 +75,23 @@ export class HistorialVotacionesComponent implements OnInit {
   }
 
   public openConfirmationDialog(id) {
-    this.confirmationDialogService.confirm('Por favor confirma', `¿Quieres eliminar la votación?`)
-    .then((confirmed) => {
-      if(confirmed === true){
-        this.eliminarVotacion(id)
-      }
-    })
-    .catch(() => 
-      console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));
-  }
+    let detalleVotacion = this.servicioVotaciones.getDetalleVotacion(id)
+    console.log("ESTADO> " + detalleVotacion.status)
+    if(detalleVotacion.status == '2' || detalleVotacion.status == '0'){
+      this.votacionIniciada("No se puede eliminar una votación una vez iniciada o cerrada.!")
+      return;
+    }
+    else {
+      this.confirmationDialogService.confirm('Por favor confirma', `¿Quieres eliminar la votación?`)
+      .then((confirmed) => {
+        if(confirmed === true){
+          this.eliminarVotacion(id)
+        }
+      })
+      .catch(() => 
+        console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));
+    }
+    }
 
   showSuccess() {
     this.toastService.show(`Votación eliminada correctamente.!`, {
@@ -100,6 +108,14 @@ export class HistorialVotacionesComponent implements OnInit {
       delay: 5000 ,
       autohide: true,
       headertext: 'Error!!!'
+    });
+  }
+
+  votacionIniciada(customTpl) {
+    this.toastService.show(customTpl, {
+      classname: 'bg-info text-light',
+      delay: 3000,
+      autohide: true
     });
   }
 }
