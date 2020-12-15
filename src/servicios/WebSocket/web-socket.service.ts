@@ -1,23 +1,29 @@
-import { io } from 'socket.io-client'
-import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+import io from 'socket.io-client'
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+
+@Injectable({
+  providedIn: 'root'
+})
 
 export class WebSocketService {
-  private url = 'https://immense-savannah-25898.herokuapp.com';
-  private socket; 
+  private url = 'http://localhost:3000';
 
   constructor() {
-    this.socket = io(this.url)
   }
 
-  public sendVotacion(config) {
-    this.socket.emit('read-vote', config);
-}
+  public connectToServer(config: any) {
+    var socket = io.connect(this.url, { 'forceNew': true });
+    this.sendData(socket, config);
+    return socket;
+  }
 
-  public getVote = () => {
-    /*return Observable.create((observer) => {
-        this.socket.on('read-vote', (message) => {
-            observer.next(message);
-        });
-    });*/
-}
+  public sendData(config, socket: any) {
+    socket.emit('read-vote', config);
+  }
+
+  public getVote(config, socket: any){
+    socket.on('get-vote', config)
+  }
 }

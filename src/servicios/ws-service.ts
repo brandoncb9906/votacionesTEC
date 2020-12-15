@@ -79,4 +79,8 @@ constructor(private http: HttpClient) {}
     }
     return this.http.post(`${this.url}/api/closeVote`, config)  
   }
+
+  getVote(config) {
+    return this.http.post(`${this.url}/api/getVote`, config)
+  }
 }

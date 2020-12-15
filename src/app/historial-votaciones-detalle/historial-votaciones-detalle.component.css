@@ -64,6 +64,7 @@ a {
     position: absolute;
     top: 75px;
     left: 90px;
+    height: 200px;
 }
 #global {
 	height: 300px;
@@ -79,3 +80,4 @@ td {
 .cleanTable {
     border: none;
 }
+
